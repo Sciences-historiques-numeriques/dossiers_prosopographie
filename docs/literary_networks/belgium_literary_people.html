@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Literary Network Database</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Liberation Sans', Arial, sans-serif; background: #e8f4fd; padding: 30px; color: #1a3a5c; }
+h1 { text-align: center; margin-bottom: 25px; color: #2c5f8a; font-size: 1.6em; }
+.filters { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(44,95,138,0.1); display: flex; flex-wrap: wrap; gap: 30px; align-items: center; }
+.filter-group { display: flex; flex-direction: column; gap: 8px; }
+.filter-group label { font-weight: bold; font-size: 0.9em; color: #2c5f8a; }
+.filter-group input[type="text"] { padding: 10px 14px; border: 2px solid #b8d9f0; border-radius: 8px; font-size: 0.95em; outline: none; transition: border-color 0.2s; width: 220px; }
+.filter-group input[type="text"]:focus { border-color: #5ba3d9; }
+.slider-container { position: relative; width: 280px; height: 40px; }
+.slider-track { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; height: 6px; background: #d0e8f7; border-radius: 3px; }
+.slider-range { position: absolute; top: 50%; transform: translateY(-50%); height: 6px; background: #5ba3d9; border-radius: 3px; }
+.slider-container input[type="range"] { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; height: 6px; -webkit-appearance: none; appearance: none; background: transparent; pointer-events: none; outline: none; margin: 0; }
+.slider-container input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #4a9bd9; border: 3px solid #fff; box-shadow: 0 2px 6px rgba(74,155,217,0.4); cursor: pointer; pointer-events: all; position: relative; z-index: 2; }
+.slider-container input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #4a9bd9; border: 3px solid #fff; box-shadow: 0 2px 6px rgba(74,155,217,0.4); cursor: pointer; pointer-events: all; position: relative; z-index: 2; }
+.slider-values { display: flex; justify-content: space-between; font-size: 0.85em; color: #4a7fa8; margin-top: 4px; }
+.slider-values span { background: #dceefb; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
+.table-container { background: #fff; border-radius: 12px; overflow: auto; max-height: 70vh; box-shadow: 0 2px 12px rgba(44,95,138,0.1); }
+table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+thead { position: sticky; top: 0; z-index: 1; }
+th { background: #4a9bd9; color: #fff; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+td { padding: 9px 10px; border-bottom: 1px solid #e3f0fa; }
+tr:nth-child(even) { background: #f0f8ff; }
+tr:hover { background: #dceefb; }
+.row-count { text-align: center; margin-top: 12px; font-size: 0.9em; color: #5a8ab5; }
+</style>
+</head>
+<body>
+
+<h1>Sociabilités et réseaux littéraires — Annexe</h1>
+
+<div class="filters">
+  <div class="filter-group">
+    <label for="nameFilter">Filter by Nom</label>
+    <input type="text" id="nameFilter" placeholder="Type a name...">
+  </div>
+  <div class="filter-group">
+    <label>Année de naissance</label>
+    <div class="slider-container">
+      <div class="slider-track"></div>
+      <div class="slider-range" id="sliderRange"></div>
+      <input type="range" id="minYear" min="1850" max="1930" value="1850" step="1">
+      <input type="range" id="maxYear" min="1850" max="1930" value="1930" step="1">
+    </div>
+    <div class="slider-values">
+      <span id="minLabel">1850</span>
+      <span id="maxLabel">1930</span>
+    </div>
+  </div>
+</div>
+
+<div class="table-container">
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Numéro</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Année_Naissance</th>
+        <th>Année_Décès</th>
+        <th>Nombre_d_institutions</th>
+        <th>Nrm_Degree</th>
+        <th>Farness_Main_Component</th>
+        <th>n_Closeness_Main_Component</th>
+        <th>Betweenness_Main_Component</th>
+        <th>n_Betweenness</th>
+        <th>Bonacich_Power</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
+
+<div class="row-count" id="rowCount"></div>
+
+<script>
+const MIN_Y = 1850, MAX_Y = 1930;
+let allData = [];
+
+const nameFilter = document.getElementById('nameFilter');
+const minSlider  = document.getElementById('minYear');
+const maxSlider  = document.getElementById('maxYear');
+const sliderRange = document.getElementById('sliderRange');
+const minLabel   = document.getElementById('minLabel');
+const maxLabel   = document.getElementById('maxLabel');
+const tbody      = document.getElementById('tableBody');
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g,
+  c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// Relative URL: works on GitHub Pages project sites (/repo/) and on localhost.
+fetch('person.csv')
+  .then(r => {
+    if (!r.ok) throw new Error('HTTP ' + r.status + ' for person.csv');
+    return r.text();
+  })
+  .then(csv => {
+    allData = parseCSV(csv);
+    applyFilters();
+  })
+  .catch(err => {
+    console.error(err);
+    tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;padding:20px;">Could not load person.csv (' +
+      esc(err.message) + '). Make sure it is committed next to this HTML file (same case-sensitive name).</td></tr>';
+  });
+
+function parseCSV(text) {
+  text = text.replace(/^\uFEFF/, '');                 // strip BOM
+  const lines = text.split(/\r?\n/).filter(l => l.trim());
+  if (!lines.length) return [];
+  const h = lines[0];
+  const delim = (h.match(/;/g) || []).length > (h.match(/,/g) || []).length ? ';' : ',';
+  const data = [];
+  for (let i = 1; i < lines.length; i++) {
+    const v = parseCSVLine(lines[i], delim);
+    if (v.length >= 12) data.push(v);
+  }
+  return data;
+}
+
+function parseCSVLine(line, delim) {
+  const out = [];
+  let cur = '', q = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (q && line[i + 1] === '"') { cur += '"'; i++; }
+      else q = !q;
+    } else if (ch === delim && !q) {
+      out.push(cur.trim()); cur = '';
+    } else cur += ch;
+  }
+  out.push(cur.trim());
+  return out;
+}
+
+function applyFilters() {
+  const nameVal = nameFilter.value.toLowerCase();
+  const lo = parseInt(minSlider.value), hi = parseInt(maxSlider.value);
+  const fullRange = lo === MIN_Y && hi === MAX_Y;
+
+  const filtered = allData.filter(row => {
+    const nameMatch = !nameVal || (row[1] || '').toLowerCase().includes(nameVal);
+    const birth = parseInt(row[3]);
+    // At full range, keep rows with missing/out-of-range birth years
+    const yearMatch = fullRange || (!isNaN(birth) && birth >= lo && birth <= hi);
+    return nameMatch && yearMatch;
+  });
+
+  tbody.innerHTML = filtered.map(row =>
+    '<tr>' + row.map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>'
+  ).join('');
+  document.getElementById('rowCount').textContent =
+    filtered.length + ' of ' + allData.length + ' rows shown';
+}
+
+function updateSlider() {
+  let lo = parseInt(minSlider.value), hi = parseInt(maxSlider.value);
+  if (lo > hi) {
+    [minSlider.value, maxSlider.value] = [hi, lo];
+    [lo, hi] = [hi, lo];
+  }
+  const range = MAX_Y - MIN_Y;
+  const left = ((lo - MIN_Y) / range) * 100;
+  const right = ((hi - MIN_Y) / range) * 100;
+  sliderRange.style.left = left + '%';
+  sliderRange.style.width = (right - left) + '%';
+  minLabel.textContent = lo;
+  maxLabel.textContent = hi;
+  applyFilters();
+}
+
+nameFilter.addEventListener('input', applyFilters);
+minSlider.addEventListener('input', updateSlider);
+maxSlider.addEventListener('input', updateSlider);
+updateSlider();
+</script>
+
+</body>
+</html>

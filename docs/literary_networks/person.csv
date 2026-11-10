@@ -1,0 +1,265 @@
+"Numéro"	"Nom"	"Prénom"	"Année_Naissance"	"Année_Décès"	"Nombre_d_institutions"	"Nrm_Degree"	"Farness_Main_Component"	"n_Closeness_Main_Component"	"Betweenness_Main_Component"	"n_Betweenness"	"Bonacich_Power"
+3	"Adine"	"France"	1890	1977	1	16	646	37	0	0	0.5
+4	"Alex"	"Jeannne"	0	1965	1	2.6	671	35	0	0	0.5
+9	"André"	"Francis"	1897	1976	2	1.9	660	36	1.91	0	13
+15	"Ansel"	"Franz"	1874	1937	1	11	541	44	0.93	0	22
+16	"Anthelme"	"Gille"	0	0	1	0.4		0	0	27	
+23	"Avermaete"	"Roger"	1893	1988	2	5.6	621	38	241	0.7	40
+25	"Ayguesparse"	"Albert"	1900	1996	7	22	473	50	678	1.9	1
+29	"Baert"	"René"	0	0	2	0.7	736	32	247	0.7	31
+50	"Bay"	"Paul"	1887	1970	2	5.2	657	36	793	2.2	21
+51	"Bayot"	"Alphonse"	1876	1937	1	14	524	45	11.1	0	5.6
+61	"Bernard"	"Charles"	1875	1961	2	19	455	52	428	1.2	21
+63	"Bernier"	"Armand"	1902	1969	4	19	485	49	255	0.7	15
+75	"Biermé"	"Maria"	1863	1932	1	11	531	45	0	0	13
+81	"Bodart"	"Roger"	1910	1973	3	8.6	534	44	120	0.3	20
+84	"Bolsée"	"Berthe"	1905	1983	1	0.4		0	0	33	
+86	"Boon"	"Jean"	0	0	1	16	646	37	0	0	18
+88	"Bosmant"	"Jules"	1893	1971	1	4.1	655	36	0	0	40
+89	"Bouche"	"Ferdinand"	1869	1943	1	11	531	45	0	0	6.7
+93	"Boumal"	"Louis"	1890	1918	2	0.7		0	0	0.5	
+95	"Bourgeois"	"Pierre"	1898	1976	5	24	472	50	156	0.4	2.5
+100	"Braun"	"Thomas"	1876	1961	4	16	512	46	1162	3.2	15
+111	"Burniaux"	"Constant"	1892	1975	4	24	469	51	740	2.1	5.1
+121	"Cappe"	"Jeanne"	1895	1956	2	16	646	37	0	0	23
+123	"Carême"	"Maurice"	1899	1978	2	17	492	48	168	0.5	21
+127	"Carton de Wiart"	"Henry"	1869	1951	2	29	470	50	1741	4.9	33
+132	"Champagne"	"Élise"	1897	1983	1	4.1	655	36	0	0	5
+136	"Charlier"	"Gustave"	1885	1959	1	15	509	47	23.1	0.1	8.1
+141	"Chavée"	"Achille"	1906	1969	5	4.9	734	32	15.7	0	5.6
+143	"Chenoy"	"Léon"	1890	1961	4	23	475	50	180	0.5	19
+146	"Christophe"	"Lucien"	1891	1975	2	0.7		0	0	14	
+147	"Claessens"	"Bob"	1901	1971	2	16	491	48	137	0.4	21
+154	"Closson"	"Herman"	1901	1982	2	10	511	46	318	0.9	15
+157	"Colin"	"Paul"	1890	1943	1	0.4		0	0	22	
+158	"Colinet"	"Paul"	1898	1957	1	3.7	820	29	0	0	0.5
+161	"Colleye"	"Hubert"	1883	1972	3	18	520	46	1221	3.4	0.5
+164	"Collin"	"Isi"	1878	1931	1	11	531	45	0	0	21
+167	"Conrardy"	"Charles"	1893	1957	3	21	476	50	434	1.2	28
+168	"Conrardy"	"Joseph"	1876	1949	1	16	646	37	0	0	5.6
+179	"Cornil"	"Maurice"	0	0	1	0.4		0	0	38	
+181	"Counson"	"Albert"	1880	1933	1	12	541	44	2.28	0	0.5
+183	"Courouble"	"Léopold"	1861	1937	1	14	524	45	11.1	0	21
+194	"d'Orbaix"	"D.J."	1889	1943	2	16	646	37	247	0.7	4.6
+205	"Davignon"	"Henri"	1879	1964	2	26	486	49	1216	3.4	0.5
+206	"Daye"	"Pierre"	1892	1960	2	12	528	45	73.9	0.2	13
+208	"de Bongnie"	"Émile"	1888	0	1	0.7	1023	23	0	0	22
+222	"de Ghelderode"	"Michel"	1898	1962	3	20	484	49	542	1.5	1.5
+227	"de Halleux"	"Louis"	1858	1940	1	16	646	37	0	0	15
+228	"de Haulleville"	"Éric"	1900	1941	1	9.3	528	45	0	0	21
+229	"de Horion"	"Constant"	1901	0	2	15	497	48	107	0.3	8.1
+230	"de Kerchove"	"Arnold"	1906	1979	1	9.3	528	45	0	0	1.5
+231	"de Kerchove"	"P."	0	0	1	9.3	528	45	0	0	6.1
+240	"de Lichtervelde"	"Louis"	1889	1959	1	16	646	37	0	0	35
+246	"de Mey"	"Carlo"	1895	1962	1	0.4		0	0	21	
+249	"de Reul"	"Paul"	1871	1945	1	11	531	45	0	0	31
+250	"De Ridder"	"André"	1888	1961	1	0.4		0	0	5.6	
+257	"De Smet"	"Robert"	1883	1955	1	11	531	45	0	0	5.6
+262	"de Vaux de Champion"	"Cécile"	1884	1961	2	18	641	37	179	0.5	26
+269	"Deauville"	"Max"	1881	1966	5	30	451	53	1150	3.2	8.1
+270	"Debatty"	"Léon"	1884	1927	1	0.4		0	0	2.5	
+273	"Declercq"	"Aimé"	1899	1978	3	2.2	666	36	1.12	0	0.5
+276	"Dehaye"	"Marcel"	1907	1990	1	0.7		0	0	6.6	
+282	"Delaet"	"Jean"	1904	0	3	15	506	47	243	0.7	18
+283	"Delage"	"Arthur"	0	0	1	0.4		0	0	33	
+284	"Delattre"	"Louis"	1870	1938	1	14	523	45	12.5	0	2.5
+287	"Delchevalerie"	"Charles"	1872	1950	1	1.9	708	33	0	0	27
+292	"Delhaye"	"Stanislas"	1895	0	1	0.4		0	0	15	
+298	"Delori"	"Raymond"	1898	0	1	16	646	37	0	0	43
+300	"Delvaux Marius"	"L."	0	0	1	1.1	822	29	0	0	15
+313	"Denis"	"Yvan"	1907	1977	1	3.4	591	40	0	0	1
+314	"Denuit"	"Désiré"	1905	1987	1	13	501	47	0	0	31
+316	"Depaye"	"Jean"	0	0	1	11	531	45	0	0	16
+327	"Desonay"	"Fernand"	1899	1973	2	16	646	37	0	0	8.1
+328	"Desprechins"	"Émile"	1869	1950	1	16	646	37	0	0	18
+330	"Destrée"	"Jules"	1863	1936	2	23	461	51	522	1.5	21
+344	"Dotremont"	"Christian"	1922	1979	1	3.7	820	29	0	0	0.5
+346	"Doutrepont"	"Auguste"	1865	1929	1	11	559	42	0.24	0	15
+347	"Doutrepont"	"Georges"	1868	1941	1	15	509	47	23.1	0.1	21
+358	"Dubois"	"Remy"	1910	0	1	9.3	528	45	0	0	2
+368	"Dumont"	"Fernand"	1906	1945	4	4.5	735	32	9.27	0	19
+371	"Dumont-Wilden"	"Louis"	1875	1963	2	14	511	46	17.8	0	41
+383	"Eemans"	"Marc"	1907	1994	2	14	500	47	492	1.4	19
+385	"Elskamp"	"Max"	1862	1931	2	18	494	48	654	1.8	13
+390	"Erève"	"Paul"	1893	1978	1	4.1	662	36	0	0	18
+394	"Fabry"	"Camille"	1887	1960	2	15	508	47	362	1	0.5
+395	"Faffin"	"Henri-Pierre"	1885	1964	1	16	646	37	0	0	21
+399	"Fast"	"Henri"	1898	0	2	1.1	820	29	191	0.5	29
+402	"Feller"	"Jules"	1859	1940	1	15	509	47	23.1	0.1	8.1
+405	"Fierens"	"Paul"	1895	1957	4	25	424	56	1257	3.5	27
+406	"Fischbach"	"Jean"	1884	1928	1	7.5	570	42	0	0	40
+408	"Fleischman"	"Théo"	1893	1979	1	7.5	570	42	0	0	6.1
+409	"Flouquet"	"Pierre-Louis"	1900	1967	7	26	427	56	813	2.3	18
+412	"Fontaine"	"Pierre"	1898	1968	3	23	461	51	1975	5.5	33
+420	"François (www)"	"Lucien"	1909	0	1	0.4		0	0	7.1	
+423	"Frenay-Cid"	"Herman"	1891	1975	1	4.1	662	36	0	0	21
+431	"Garnir"	"Georges"	1868	1939	1	14	511	46	17.8	0	5
+432	"Gascht"	"André"	1921	0	1	0.4		0	0	7.6	
+433	"Gauchez"	"Maurice"	1884	1957	6	12	541	44	183	0.5	4.6
+443	"Gevers"	"Marie"	1883	1975	3	25	431	55	709	2	4
+449	"Gilkin"	"Iwan"	1858	1924	1	9.7	562	42	0	0	37
+451	"Gille"	"Valère"	1867	1950	1	15	509	47	23.1	0.1	12
+455	"Giraud"	"Albert"	1860	1929	2	11	559	42	247	0.7	10
+457	"Glesener"	"Edmond"	1874	1951	1	15	509	47	23.1	0.1	16
+458	"Glineur"	"Jean"	1906	1969	2	4.5	588	40	735	2.1	6.1
+459	"Goemans"	"Camille"	1900	1960	13	6.3	648	37	258	0.7	35
+460	"Goemaere"	"Pierre"	1894	1975	1	0.4		0	0	31	
+462	"Goffin"	"Arnold"	1863	1934	1	13	539	44	4.03	0	2
+465	"Goffin"	"Robert"	1898	1984	2	9.7	589	40	220	0.6	0.5
+466	"Goffinet"	"Henri"	1884	0	1	16	646	37	0	0	14
+469	"Golstein"	"René"	1891	0	1	6	619	38	0	0	10
+479	"Groffier"	"Jean"	1908	1989	2	15	497	48	107	0.3	39
+484	"Guiette"	"Robert"	1895	1976	2	16	450	53	524	1.5	11
+488	"Habaru"	"Augustin"	1898	1944	1	1.5	670	35	0	0	36
+489	"Habaru"	"Omer"	1893	1977	1	4.1	662	36	0	0	15
+494	"Haine"	"Édouard"	1887	1959	1	4.5	563	42	0	0	19
+496	"Halflants"	"Paul"	1873	1945	1	16	646	37	0	0	19
+498	"Haloche"	"Maurice"	1878	1963	1	1.1	878	27	0	0	33
+500	"Hamoir"	"Irène"	1906	1994	2	4.1	819	29	0.57	0	32
+505	"Hardy"	"Adolphe"	1868	1954	1	16	646	37	0	0	0.5
+512	"Havrenne"	"Marcel"	1912	1957	4	4.5	735	32	9.27	0	13
+515	"Hellens"	"Franz"	1881	1972	5	27	452	52	3099	8.7	31
+520	"Henneuse"	"Armand"	1901	1976	2	16	491	48	137	0.4	5.1
+530	"Hermendes"	"Lydie"	1897	1991	1	16	646	37	0	0	24
+535	"Hommel"	"Luc"	1896	1960	1	0.4		0	0	12	
+537	"Hoornaert"	"André"	1884	0	1	16	646	37	0	0	10
+540	"Hoornaert"	"Rodolphe"	1886	0	1	16	646	37	0	0	1.5
+546	"Hubermont"	"Pierre"	1903	1989	2	11	521	45	105	0.3	1
+549	"Hublet"	"Albert"	1896	1973	1	16	646	37	0	0	15
+559	"Jadot"	"Joseph-Marie"	1886	1967	2	16	646	37	247	0.7	28
+560	"Jadot"	"René"	0	0	1	0.7	628	38	0	0	1
+561	"Jans"	"Adrien"	1905	1973	1	3.4	591	40	0	0	3.1
+578	"Kervyn de Marcke ten Driessche"	"Roger"	1896	1965	1	16	646	37	0	0	6.1
+579	"Kervyn de Meerenré"	"Jacques"	1896	1977	1	7.5	570	42	0	0	16
+580	"Kiesel"	"Frédéric"	1923	0	1	4.9	554	43	0	0	20
+581	"Kinds"	"Edmond"	1907	1992	1	0.4		0	0	21	
+588	"Koninckx"	"Willy"	1900	1954	4	22	474	50	650	1.8	21
+589	"Krains"	"Hubert"	1862	1934	2	22	463	51	449	1.3	35
+598	"Laloire"	"Marcel"	1903	1976	1	16	646	37	0	0	21
+602	"Lambotte"	"Emma"	1876	1963	1	11	531	45	0	0	21
+605	"Laport"	"Georges"	1898	1945	1	1.9	708	33	0	0	17
+615	"Le Roy"	"Grégoire"	1862	1941	1	9.3	528	45	0	0	6.1
+628	"Lecomte"	"Émile"	1870	1935	2	12	513	46	367	1	21
+630	"Lecomte"	"Marcel"	1900	1966	6	6.3	730	32	47.4	0.1	38
+643	"Lekeux"	"Martial"	1884	1962	1	4.1	662	36	0	0	21
+644	"Leloir"	"Léon"	1907	1945	1	16	646	37	0	0	2.5
+648	"Lenain"	"Yvan"	1907	1965	2	3.4	591	40	0	0	0.5
+651	"Lepage"	"Albert"	1895	1986	1	0.4		0	0	23	
+658	"Levaux"	"Léopold"	1892	1956	1	16	646	37	0	0	2.5
+659	"Ley"	"Madeleine"	1901	1981	1	9.3	528	45	0	0	5.6
+662	"Libbrecht"	"Géo"	1891	1976	1	2.6	671	35	0	0	24
+663	"Libert"	"Jean"	1913	1994	1	0.7		0	0	5.6	
+666	"Librecht"	"Henri"	1884	1955	1	1.5	668	35	0	0	22
+667	"Liège"	"René"	0	0	2	13	501	47	0	0	21
+671	"Limbosch"	"Raymond"	1884	1953	1	11	531	45	0	0	0.5
+672	"Linze"	"Georges"	1900	1993	5	23	473	50	555	1.6	10
+674	"Lobet"	"Marcel"	1907	1992	2	19	533	44	990	2.8	40
+678	"Loslever"	"Auguste"	1869	0	1	16	646	37	0	0	3.6
+679	"Loumaye"	"Marcel"	1889	1956	2	22	476	50	125	0.3	18
+682	"Lurkin"	"Abel"	1891	1963	2	9.7	559	42	69	0.2	21
+684	"Lyr"	"René"	1887	1957	2	18	498	48	146	0.4	3.6
+686	"Maeterlinck"	"Maurice"	1862	1949	1	15	509	47	23.1	0.1	17
+688	"Magritte"	"René"	1898	1967	12	10	608	39	302	0.8	21
+689	"Mahni"	"P."	1903	0	1	0.4		0	0	27	
+709	"Mariën"	"Marcel"	1920	1993	1	3.7	820	29	0	0	2.5
+710	"Marin"	"Auguste"	1911	1940	1	4.1	655	36	0	0	1.5
+712	"Marion"	"Denis"	1906	2000	1	6	619	38	0	0	35
+713	"Marlier"	"Georges"	1898	1968	3	14	511	46	447	1.3	14
+714	"Marlow"	"Georges"	1872	1947	4	29	417	57	1078	3	1.5
+716	"Masoin"	"Fritz"	1873	1942	1	16	646	37	0	0	0.5
+717	"Masoni"	"Carlo"	1921	0	1	1.9	708	33	0	0	13
+733	"Melloy"	"Camille"	1891	1941	1	16	646	37	0	0	21
+734	"Mélot du Dy"	"Robert"	1891	1956	2	12	517	46	20.1	0.1	3.6
+737	"Méral"	"Paul"	1895	1946	1	6	619	38	0	0	31
+742	"Mesens"	"E.L.T."	1903	1971	11	12	603	39	513	1.4	21
+745	"Meurant"	"René"	1905	1977	2	8.6	537	44	28.4	0.1	22
+748	"Michaux"	"Henri"	1899	1984	1	13	501	47	0	0	25
+751	"Milo"	"Jean"	1906	1993	1	6	619	38	0	0	35
+753	"Minne"	"Jules"	1903	1963	2	7.8	616	38	74.4	0.2	21
+754	"Miserez"	"Nestor"	1902	1968	1	0.4		0	0	1	
+756	"Mockel"	"Albert"	1866	1945	2	28	421	56	1830	5.1	2.5
+758	"Moerman"	"Ernst"	1897	1944	1	6	619	38	0	0	10
+766	"Moremans"	"Victor"	1890	0	1	13	501	47	0	0	18
+785	"Ned"	"Édouard"	1873	1949	1	16	646	37	0	0	0.5
+786	"Neuhuys"	"Paul"	1897	1984	1	1.1	674	35	0	0	25
+790	"Noël"	"Frédéric J."	1900	0	1	4.5	563	42	0	0	25
+793	"Norge"	"Géo"	1898	1990	2	14	501	47	247	0.7	8.1
+795	"Nothomb"	"Pierre"	1887	1966	1	2.6	576	41	0	0	15
+796	"Nougé"	"Paul"	1895	1967	18	11	601	39	897	2.5	2.5
+801	"Oppitz"	"René-C."	1902	1976	1	0.4		0	0	0.5	
+806	"Paquot"	"Marcel"	1891	0	1	0.7		0	0	5	
+813	"Pasquier"	"Alex"	1888	1963	1	0.4		0	0	40	
+819	"Périer"	"Gaston-Denys"	1879	1962	2	19	486	49	110	0.3	13
+823	"Petronio"	"Arthur"	1897	1983	2	14	501	47	247	0.7	0.5
+827	"Piérard"	"Louis"	1886	1951	1	11	531	45	0	0	2.5
+837	"Pirotte"	"Philippe"	1900	1938	1	0.4		0	0	3.6	
+840	"Plisnier"	"Charles"	1896	1952	6	23	439	54	1728	4.8	6.1
+848	"Poulet"	"Robert"	1893	1989	3	11	483	49	343	1	15
+849	"Poupeye"	"Camille"	1874	1963	3	18	490	48	324	0.9	8.6
+852	"Pulings"	"Gaston"	1885	1941	5	31	411	58	818	2.3	37
+853	"Purnal"	"René"	1898	1970	1	6	619	38	0	0	5.6
+855	"Quoilin"	"Maurice"	1903	1944	2	4.1	655	36	0	0	4.6
+857	"Raes"	"Florent"	1906	0	2	17	488	49	124	0.3	13
+869	"Rency"	"Georges"	1875	1951	1	13	514	46	9.44	0	1
+872	"Revelard"	"Adrienne"	1907	0	1	4.1	655	36	0	0	30
+874	"Rigot"	"Fernand"	1894	1981	2	1.9	847	28	161	0.4	13
+875	"Rochet"	"André"	1907	0	1	1.1	822	29	0	0	21
+887	"Ruet"	"Noël"	1898	1965	1	1.9	708	33	0	0	20
+899	"Saussus"	"Roger"	1902	0	1	16	646	37	0	0	40
+900	"Sauvage"	"Armand"	0	0	1	13	501	47	0	0	26
+904	"Schmitt"	"V."	0	0	1	0.4		0	0	0.5	
+909	"Scutenaire"	"Louis"	1905	1987	3	5.2	816	29	3	0	1.5
+920	"Simon (www)"		1856	1939	1	15	509	47	23.1	0.1	11
+938	"Soumagne"	"Henri"	1891	1951	1	13	501	47	0	0	13
+939	"Souris"	"André"	1899	1970	8	10	608	39	302	0.8	21
+940	"Spaak"	"Claude"	1904	1989	2	7.5	615	39	49.4	0.1	40
+945	"Steurs"	"Franz"	0	0	1	7.5	570	42	0	0	0.5
+957	"Terlinden"	"Charles"	1878	1972	1	16	646	37	0	0	7.1
+959	"Teugels"	"Jean"	1896	1944	1	3.4	591	40	0	0	21
+962	"Thiry"	"Marcel"	1897	1977	3	21	482	49	118	0.3	39
+971	"Tousseul"	"Jean"	1890	1944	1	3.7	637	37	0	0	21
+976	"Vaes"	"René"	1898	1942	2	8.2	538	44	78.7	0.2	8.1
+983	"Van de Putte"	"Adrien"	1911	0	1	16	646	37	0	0	31
+986	"van den Steen de Jehay"	"Maria"	1870	1941	1	16	646	37	0	0	26
+988	"Van Dooren"	"Jean-Jacques"	1890	1970	2	9.7	559	42	69	0.2	21
+992	"Van Hecke"	"Paul-Gustave"	1887	1967	2	6.3	619	38	247	0.7	0.5
+1000	"Van Offel"	"Horace"	1876	1944	2	19	457	52	408	1.1	38
+1003	"Van Vlodorp"	"Robert"	1908	0	1	16	646	37	0	0	10
+1007	"Vandendries"	"Pierre"	1908	0	1	2.6	671	35	0	0	15
+1008	"Vandeputte"	"Henri"	1877	1952	1	9.3	528	45	0	0	5.6
+1010	"Vanderborght"	"Paul"	1899	1971	1	0.4		0	0	30	
+1012	"Vandercammen"	"Edmond"	1901	1980	6	28	457	52	694	1.9	0.5
+1015	"Vanzype"	"Gustave"	1869	1955	1	15	509	47	23.1	0.1	18
+1022	"Verboom"	"René"	1891	1955	1	9.3	528	45	0	0	21
+1024	"Verhoeven"	"Joseph"	1894	0	1	16	646	37	0	0	1.5
+1027	"Vermeylen"	"Auguste"	1872	1945	1	11	531	45	0	0	8.6
+1028	"Vervoort"	"Frans"	0	0	1	1.1	822	29	0	0	38
+1033	"Virrès"	"Georges"	1869	1946	2	28	472	50	1652	4.6	11
+1034	"Viseur"	"Gustave"	1916	2002	1	7.5	570	42	0	0	8.6
+1036	"Vivier"	"Robert"	1894	1989	3	21	482	49	118	0.3	10
+1044	"Watteyne"	"Victor"	1883	0	1	16	646	37	0	0	1
+1046	"Wennekers"	"Louis"	1898	0	1	13	501	47	0	0	15
+1048	"Werrie"	"Paul"	1901	1974	4	25	424	56	1257	3.5	0.5
+1049	"Weyergans"	"Franz"	1912	1974	1	0.7		0	0	40	
+1056	"Wilmotte"	"Maurice"	1861	1942	2	24	446	53	574	1.6	35
+1060	"Wyseur"	"Marcel"	1886	1950	1	7.5	570	42	0	0	35
+1073	"De Becker"	"Raymond"	0	0	1	4.5	563	42	0	0	25
+1076	"De Smet"	"Germaine"	1884	1969	1	16	646	37	0	0	19
+1078	"Dubois"	"Hubert"	1903	1965	1	1.9	828	29	0	0	1
+1083	"Marschal"	"Denise"	0	0	1	16	646	37	0	0	5.6
+1085	"Minne"	"Joris"	0	0	1	3.7	637	37	0	0	39
+1087	"Van den Bosch"	"Firmin"	1864	1949	2	25	489	48	1112	3.1	8.6
+1088	"Van Essche"	"Maurice"	0	0	3	3	643	37	92.4	0.3	41
+1090	"Verlant"	"Ernest"	1862	1924	1	9.7	562	42	0	0	22
+1098	"Derycke"	"Gaston"	0	0	2	6.3	619	38	247	0.7	27
+1099	"Allard l'Olivier"	"André"	1913	0	1	0.4		0	0	15	
+1101	"Brabant"	"Hyacinthe"	1907	1975	1	13	501	47	0	0	40
+1108	"Kammans"	"Louis-Philippe"	1912	1972	1	0.4		0	0	1	
+1116	"Séverin"	"Fernand"	1867	1931	1	11	558	42	0.49	0	31
+1126	"Ubac"	"Raoul"	0	0	2	1.9	804	29	0	0	21
+1133	"Rosy"	"Léopold"	1877	1966	1	0.4		0	0	21	
+1134	"Servais"	"Max"	1904	1990	3	7.8	614	39	82.7	0.2	13
+1138	"Stiernet"	"Hubert"	1863	1939	2	24	446	53	574	1.6	21
+1139	"Rose"	"Max"	0	0	1	1.1	878	27	0	0	0.5
+1141	"Parfondry"	"Marcel"	0	0	2	6	553	43	287	0.8	0.5
+1151	"Spaak"	"Paul"	1876	1936	1	13	537	44	6.01	0	31

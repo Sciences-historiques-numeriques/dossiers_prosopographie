@@ -29,6 +29,8 @@ td { padding: 9px 10px; border-bottom: 1px solid #e3f0fa; }
 tr:nth-child(even) { background: #f0f8ff; }
 tr:hover { background: #dceefb; }
 .row-count { text-align: center; margin-top: 12px; font-size: 0.9em; color: #5a8ab5; }
+.msg { text-align: center; padding: 20px; }
+pre { text-align: left; white-space: pre-wrap; }
 </style>
 </head>
 <body>
@@ -36,6 +38,10 @@ tr:hover { background: #dceefb; }
 <h1>Sociabilités et réseaux littéraires — Annexe</h1>
 
 <div class="filters">
+    <div class="filter-group">
+    <label for="numFilter">Numéro (exact)</label>
+    <input type="text" id="numFilter" placeholder="e.g. 796" inputmode="numeric">
+  </div>
   <div class="filter-group">
     <label for="nameFilter">Filter by Nom</label>
     <input type="text" id="nameFilter" placeholder="Type a name...">
@@ -80,48 +86,73 @@ tr:hover { background: #dceefb; }
 <div class="row-count" id="rowCount"></div>
 
 <script>
+// Relative path: works on GitHub Pages and localhost when person.csv sits next to this file.
+// If the CSV stays on another server, put the full URL here (server must send CORS headers).
+const CSV_URL = 'person.csv';
+
 const MIN_Y = 1850, MAX_Y = 1930;
 let allData = [];
+let nameIdx = 1, birthIdx = 3;
 
-const nameFilter = document.getElementById('nameFilter');
-const minSlider  = document.getElementById('minYear');
-const maxSlider  = document.getElementById('maxYear');
+const nameFilter  = document.getElementById('nameFilter');
+const minSlider   = document.getElementById('minYear');
+const maxSlider   = document.getElementById('maxYear');
 const sliderRange = document.getElementById('sliderRange');
-const minLabel   = document.getElementById('minLabel');
-const maxLabel   = document.getElementById('maxLabel');
-const tbody      = document.getElementById('tableBody');
+const minLabel    = document.getElementById('minLabel');
+const maxLabel    = document.getElementById('maxLabel');
+const tbody       = document.getElementById('tableBody');
+const rowCount    = document.getElementById('rowCount');
+const numFilter = document.getElementById('numFilter');
+let numIdx = 0;
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-// Relative URL: works on GitHub Pages project sites (/repo/) and on localhost.
-fetch('person.csv')
+function showMessage(html) {
+  tbody.innerHTML = '<tr><td colspan="12" class="msg">' + html + '</td></tr>';
+}
+
+fetch(CSV_URL)
   .then(r => {
-    if (!r.ok) throw new Error('HTTP ' + r.status + ' for person.csv');
+    if (!r.ok) throw new Error('HTTP ' + r.status + ' for ' + CSV_URL);
     return r.text();
   })
   .then(csv => {
     allData = parseCSV(csv);
+    if (!allData.length) {
+      showMessage('No rows parsed. First 300 characters received:<pre>' + esc(csv.slice(0, 300)) + '</pre>');
+      return;
+    }
     applyFilters();
   })
   .catch(err => {
     console.error(err);
-    tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;padding:20px;">Could not load person.csv (' +
-      esc(err.message) + '). Make sure it is committed next to this HTML file (same case-sensitive name).</td></tr>';
+    showMessage('Could not load data: ' + esc(err.message) +
+      '<br>Check the file name (case-sensitive), that it is served over http(s), and CORS if it is on another domain.');
   });
 
 function parseCSV(text) {
-  text = text.replace(/^\uFEFF/, '');                 // strip BOM
+  text = text.replace(/^\uFEFF/, '');                       // strip BOM
   const lines = text.split(/\r?\n/).filter(l => l.trim());
   if (!lines.length) return [];
-  const h = lines[0];
-  const delim = (h.match(/;/g) || []).length > (h.match(/,/g) || []).length ? ';' : ',';
-  const data = [];
-  for (let i = 1; i < lines.length; i++) {
-    const v = parseCSVLine(lines[i], delim);
-    if (v.length >= 12) data.push(v);
-  }
-  return data;
+
+  const head = lines[0];
+  const count = ch => head.split(ch).length - 1;
+  const delim = ['\t', ',', ';'].sort((a, b) => count(b) - count(a))[0];
+
+  const header = parseCSVLine(head, delim).map(s => s.toLowerCase());
+  const find = (re, fallback) => {
+    const i = header.findIndex(h => re.test(h));
+    return i >= 0 ? i : fallback;
+  };
+  nameIdx  = find(/^nom$/, 1);
+  birthIdx = find(/naissance/, 3);
+  numIdx = find(/^num/, 0);
+  console.log('delimiter:', JSON.stringify(delim), '| columns:', header.length, header);
+
+  return lines.slice(1)
+    .map(l => parseCSVLine(l, delim))
+    .filter(r => r.length > 1);
 }
 
 function parseCSVLine(line, delim) {
@@ -133,8 +164,11 @@ function parseCSVLine(line, delim) {
       if (q && line[i + 1] === '"') { cur += '"'; i++; }
       else q = !q;
     } else if (ch === delim && !q) {
-      out.push(cur.trim()); cur = '';
-    } else cur += ch;
+      out.push(cur.trim());
+      cur = '';
+    } else {
+      cur += ch;
+    }
   }
   out.push(cur.trim());
   return out;
@@ -142,23 +176,25 @@ function parseCSVLine(line, delim) {
 
 function applyFilters() {
   const nameVal = nameFilter.value.toLowerCase();
+  const numVal = numFilter.value.trim();
   const lo = parseInt(minSlider.value), hi = parseInt(maxSlider.value);
   const fullRange = lo === MIN_Y && hi === MAX_Y;
 
   const filtered = allData.filter(row => {
-    const nameMatch = !nameVal || (row[1] || '').toLowerCase().includes(nameVal);
-    const birth = parseInt(row[3]);
-    // At full range, keep rows with missing/out-of-range birth years
+    const numMatch = !numVal || (row[numIdx] || '').trim() === numVal;   // identical only
+    const nameMatch = !nameVal || (row[nameIdx] || '').toLowerCase().includes(nameVal);
+    const birth = parseInt(row[birthIdx]);
     const yearMatch = fullRange || (!isNaN(birth) && birth >= lo && birth <= hi);
-    return nameMatch && yearMatch;
+    return numMatch && nameMatch && yearMatch;
   });
 
   tbody.innerHTML = filtered.map(row =>
     '<tr>' + row.map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>'
   ).join('');
-  document.getElementById('rowCount').textContent =
-    filtered.length + ' of ' + allData.length + ' rows shown';
+  rowCount.textContent = filtered.length + ' of ' + allData.length + ' rows shown';
 }
+
+numFilter.addEventListener('input', applyFilters);
 
 function updateSlider() {
   let lo = parseInt(minSlider.value), hi = parseInt(maxSlider.value);
@@ -167,9 +203,9 @@ function updateSlider() {
     [lo, hi] = [hi, lo];
   }
   const range = MAX_Y - MIN_Y;
-  const left = ((lo - MIN_Y) / range) * 100;
+  const left  = ((lo - MIN_Y) / range) * 100;
   const right = ((hi - MIN_Y) / range) * 100;
-  sliderRange.style.left = left + '%';
+  sliderRange.style.left  = left + '%';
   sliderRange.style.width = (right - left) + '%';
   minLabel.textContent = lo;
   maxLabel.textContent = hi;

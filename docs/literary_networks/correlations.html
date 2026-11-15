@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corrélations — Sociabilités et réseaux littéraires</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Sociabilités et réseaux littéraires — Corrélations</h1>
+<nav><a href="population.html">Population</a><a href="distributions.html">Distributions</a><a href="correlations.html"><b>Corrélations</b></a></nav>
+
+<div class="panel sticky">
+  <div class="row">
+    <label>Courbe de tendance (rouge)
+      <select id="fit">
+        <option value="linear">Droite de régression (moindres carrés)</option>
+        <option value="loess">Courbe lissée (LOESS)</option>
+      </select></label>
+    <label id="spanWrap">Lissage LOESS
+      <select id="span"><option value="0.3">0,3 (local)</option><option value="0.5">0,5</option><option value="0.75" selected>0,75</option><option value="1">1 (global)</option></select></label>
+    <span class="hint">r = coefficient de Pearson. Les personnes sans valeur (p. ex. naissance inconnue) sont ignorées pour chaque couple.</span>
+  </div>
+</div>
+
+<div class="scatters" id="plots"></div>
+<p class="hint" id="msg"></p>
+
+<script>
+const CSV_URL='person.csv';
+const COLS=[
+  {key:'annee_naissance', label:'Année_Naissance', zeroNull:true},
+  {key:'nombre_d_institutions', label:'Nombre_d_institutions'},
+  {key:'n_closeness_main_component', label:'n_Closeness_Main_Component'},
+  {key:'betweenness_main_component', label:'Betweenness_Main_Component'},
+  {key:'bonacich_power', label:'Bonacich_Power'},
+];
+const RED='#e5251f';
+const $=id=>document.getElementById(id);
+const norm=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');
+function parseCSV(text){
+  text=text.replace(/^\uFEFF/,'');
+  const first=text.split(/\r?\n/,1)[0];
+  const d=first.includes('\t')?'\t':(first.split(';').length>first.split(',').length?';':',');
+  const rows=[];let row=[],cur='',q=false;
+  for(let i=0;i<text.length;i++){const c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){cur+='"';i++}else q=false}else cur+=c}
+    else if(c==='"')q=true;
+    else if(c===d){row.push(cur);cur=''}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(cur);cur='';if(row.some(x=>x!==''))rows.push(row);row=[]}
+    else cur+=c}
+  if(cur!==''||row.length){row.push(cur);rows.push(row)}
+  return rows;
+}
+const f3=v=>(+v.toFixed(3)).toLocaleString('fr');
+
+/* least squares + Pearson r */
+function linfit(p){
+  const n=p.length; let sx=0,sy=0,sxx=0,syy=0,sxy=0;
+  for(const {x,y} of p){sx+=x;sy+=y;sxx+=x*x;syy+=y*y;sxy+=x*y}
+  const vx=sxx-sx*sx/n, vy=syy-sy*sy/n, cxy=sxy-sx*sy/n;
+  if(n<3||vx<=0) return null;
+  const b=cxy/vx, a=(sy-b*sx)/n, r=vy>0?cxy/Math.sqrt(vx*vy):0;
+  return {a,b,r};
+}
+/* local linear regression with tricube weights, evaluated on a grid */
+function loess(p,span,m=40){
+  const n=p.length; if(n<5) return [];
+  let xmin=Infinity,xmax=-Infinity; for(const q of p){if(q.x<xmin)xmin=q.x;if(q.x>xmax)xmax=q.x}
+  if(xmin===xmax) return [];
+  const k=Math.max(3,Math.min(n,Math.ceil(span*n))), out=[];
+  for(let i=0;i<m;i++){
+    const x0=xmin+(xmax-xmin)*i/(m-1);
+    const d=p.map(q=>Math.abs(q.x-x0));
+    let h=d.slice().sort((a,b)=>a-b)[k-1]; if(!(h>0)) h=(xmax-xmin)/m;
+    let sw=0,sx=0,sy=0,sxx=0,sxy=0;
+    for(let j=0;j<n;j++){const u=d[j]/h; if(u>=1)continue;
+      const w=Math.pow(1-u*u*u,3), x=p[j].x, y=p[j].y;
+      sw+=w;sx+=w*x;sy+=w*y;sxx+=w*x*x;sxy+=w*x*y}
+    if(sw<=0) continue;
+    const den=sw*sxx-sx*sx;
+    const y=Math.abs(den)<1e-12*Math.max(1,sw*sxx) ? sy/sw : (()=>{const b=(sw*sxy-sx*sy)/den;return (sy-b*sx)/sw+b*x0})();
+    out.push({x:x0,y});
+  }
+  return out;
+}
+
+let PLOTS=[];
+function build(rows){
+  const head=rows[0].map(norm), idx=k=>head.indexOf(k);
+  const DATA=rows.slice(1).map(r=>{const o={};
+    for(const c of COLS){const s=r[idx(c.key)];let x=(s==null||s.trim()==='')?null:parseFloat(s.replace(',','.'));
+      if(x!=null&&isNaN(x))x=null; if(c.zeroNull&&x===0)x=null; o[c.key]=x}
+    const nom=(r[idx('nom')]||'').trim(), pre=(r[idx('prenom')]||'').trim();
+    o.name=[nom,pre].filter(Boolean).join(', ');
+    return o});
+  const css=getComputedStyle(document.documentElement);
+  const accent=css.getPropertyValue('--accent').trim();
+  Chart.defaults.color=css.getPropertyValue('--muted').trim();
+  Chart.defaults.borderColor=css.getPropertyValue('--line').trim();
+  const pairs=[];
+  for(let i=0;i<COLS.length;i++)for(let j=i+1;j<COLS.length;j++)pairs.push([COLS[i],COLS[j]]);
+  $('plots').innerHTML=pairs.map(([a,b],i)=>`<div class="card">
+    <h2>${b.label} <span>en fonction de</span> ${a.label}</h2>
+    <div class="canvas"><canvas id="p${i}"></canvas></div>
+    <div class="range" id="s${i}"></div></div>`).join('');
+  PLOTS=pairs.map(([a,b],i)=>{
+    const pts=DATA.filter(d=>d[a.key]!=null&&d[b.key]!=null).map(d=>({x:d[a.key],y:d[b.key],name:d.name,year:d.annee_naissance}));
+    const chart=new Chart($('p'+i),{type:'scatter',
+      data:{datasets:[
+        {data:pts,backgroundColor:accent+'88',pointRadius:2.5,pointHoverRadius:4,order:2},
+        {data:[],type:'line',borderColor:RED,backgroundColor:RED,borderWidth:2.5,pointRadius:0,pointHitRadius:0,tension:.25,order:1}]},
+      options:{responsive:true,maintainAspectRatio:false,animation:false,
+        interaction:{mode:'point',intersect:true},
+        plugins:{legend:{display:false},tooltip:{
+          filter:(t,i)=>t.datasetIndex===0&&i<10,          // overlapping points: list up to 10 people
+          callbacks:{
+            title:items=>items.length===1?(items[0].raw.name||'(sans nom)'):`${items.length}${items.length>=10?'+':''} personnes`,
+            label:ctx=>{const p=ctx.raw, n=ctx.chart.tooltip.dataPoints.length;
+              return n===1
+                ? [`Naissance : ${p.year??'inconnue'}`,`${a.label} : ${f3(p.x)}`,`${b.label} : ${f3(p.y)}`]
+                : `${p.name||'(sans nom)'} (${p.year??'?'})`;}}}},
+        scales:{x:{title:{display:true,text:a.label}},y:{title:{display:true,text:b.label}}}}});
+    return {chart,pts,sid:'s'+i};
+  });
+  $('fit').onchange=$('span').onchange=updateFits;
+  updateFits();
+}
+
+function updateFits(){
+  const mode=$('fit').value, span=+$('span').value;
+  $('spanWrap').style.display=mode==='loess'?'':'none';
+  for(const P of PLOTS){
+    const fit=linfit(P.pts);
+    let line=[];
+    if(mode==='linear'){
+      if(fit){const xs=P.pts.map(p=>p.x),x0=Math.min(...xs),x1=Math.max(...xs);
+        line=[{x:x0,y:fit.a+fit.b*x0},{x:x1,y:fit.a+fit.b*x1}]}
+    } else line=loess(P.pts,span);
+    P.chart.data.datasets[1].data=line; P.chart.data.datasets[1].tension=mode==='linear'?0:.25;
+    P.chart.update('none');
+    let txt=`n = ${P.pts.length}`;
+    if(fit){
+      const r=fit.r, a=Math.abs(r);
+      const kind=a<.1?'tendance nulle':(r>0?'tendance positive':'tendance négative');
+      const cls=a<.1?'':(r>0?'pos':'neg');
+      txt=`<b class="${cls}">${r>0&&a>=.1?'▲':r<0&&a>=.1?'▼':'■'} ${kind}</b> · r = ${f3(r)} · pente = ${f3(fit.b)} · ${txt}`;
+    } else txt+=' · données insuffisantes';
+    $(P.sid).innerHTML=txt;
+  }
+}
+
+fetch(CSV_URL).then(r=>{if(!r.ok)throw new Error(r.status);return r.text()})
+  .then(t=>build(parseCSV(t)))
+  .catch(()=>{
+    $('msg').innerHTML=`<span class="err">Impossible de charger ${CSV_URL} (ouvrez via un serveur http, ou choisissez le fichier) :</span> <input type="file" id="file" accept=".csv,.tsv,.txt">`;
+    $('file').onchange=e=>e.target.files[0].text().then(t=>{$('msg').textContent='';build(parseCSV(t))});
+  });
+</script>
+</body>
+</html>

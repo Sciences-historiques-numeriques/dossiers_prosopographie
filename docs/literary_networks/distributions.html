@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Distributions — Sociabilités et réseaux littéraires</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Sociabilités et réseaux littéraires — Distributions</h1>
+<nav><a href="population.html">Population</a><a href="distributions.html"><b>Distributions</b></a><a href="correlations.html">Corrélations</a></nav>
+
+<div class="panel sticky">
+  <div class="row">
+    <label>Classes (valeurs continues)<input type="number" id="bins" value="20" min="2" max="100"></label>
+    <label>Largeur classe (années)<select id="ybin"><option>1</option><option>5</option><option selected>10</option><option>25</option></select></label>
+    <button id="reset">Réinitialiser les filtres</button>
+    <b id="count"></b>
+    <span class="hint">Les curseurs sous chaque graphique se combinent : tous les graphiques montrent les personnes qui satisfont l’ensemble des filtres.</span>
+  </div>
+</div>
+
+<div class="charts" id="charts"></div>
+
+<h2 class="listtitle">Personnes filtrées <span id="listCount"></span>
+  <span>Tri : clic sur un titre, Maj+clic pour cumuler (▲ → ▼ → retiré)</span></h2>
+<div class="wrap"><table><thead><tr class="labels" id="lhead"></tr></thead><tbody id="tbody"></tbody></table></div>
+<div class="status">
+  <label style="flex-direction:row;align-items:center;gap:.4rem">Lignes par page
+    <select id="pageSize"><option>50</option><option selected>100</option><option>250</option><option value="1e9">Toutes</option></select></label>
+  <span><button id="prev">←</button> <span id="pageInfo"></span> <button id="next">→</button></span>
+</div>
+<p class="hint" id="msg"></p>
+
+<script>
+const CSV_URL='person.csv';
+const COLS=[
+  {key:'annee_naissance', label:'Année_Naissance', zeroNull:true, year:true},
+  {key:'nombre_d_institutions', label:'Nombre_d_institutions'},
+  {key:'nrm_degree', label:'Nrm_Degree'},
+  {key:'n_closeness_main_component', label:'n_Closeness_Main_Component'},
+  {key:'betweenness_main_component', label:'Betweenness_Main_Component'},
+  {key:'bonacich_power', label:'Bonacich_Power'},
+];
+const $=id=>document.getElementById(id);
+const norm=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');
+function parseCSV(text){
+  text=text.replace(/^\uFEFF/,'');
+  const first=text.split(/\r?\n/,1)[0];
+  const d=first.includes('\t')?'\t':(first.split(';').length>first.split(',').length?';':',');
+  const rows=[];let row=[],cur='',q=false;
+  for(let i=0;i<text.length;i++){const c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){cur+='"';i++}else q=false}else cur+=c}
+    else if(c==='"')q=true;
+    else if(c===d){row.push(cur);cur=''}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(cur);cur='';if(row.some(x=>x!==''))rows.push(row);row=[]}
+    else cur+=c}
+  if(cur!==''||row.length){row.push(cur);rows.push(row)}
+  return rows;
+}
+const fmt=v=>+(+v).toFixed(3);
+let DATA=[], FULL={}, charts={}, lastRows=[], sorts=[], page=0;
+const LCOLS=[{key:'name',label:'Nom, Prénom'},...COLS.map(c=>({key:c.key,label:c.label,num:true}))];
+const show=v=>v==null?'—':String(fmt(v));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function toggleSort(k,multi){
+  const i=sorts.findIndex(s=>s.key===k);
+  if(!multi) sorts=(sorts.length===1&&i===0)?[{key:k,dir:-sorts[0].dir}]:[{key:k,dir:1}];
+  else if(i<0) sorts.push({key:k,dir:1});
+  else if(sorts[i].dir===1) sorts[i].dir=-1;
+  else sorts.splice(i,1);
+  renderList();
+}
+
+function renderList(){
+  const view=lastRows.slice();
+  if(sorts.length) view.sort((a,b)=>{
+    for(const s of sorts){
+      const x=a[s.key],y=b[s.key];
+      if(x==null&&y==null)continue;
+      if(x==null)return 1; if(y==null)return -1;          // empty values always last
+      const c=typeof x==='string'?x.localeCompare(y,'fr'):x-y;
+      if(c)return c*s.dir;
+    }
+    return 0;
+  });
+  document.querySelectorAll('#lhead th').forEach(th=>{
+    const i=sorts.findIndex(s=>s.key===th.dataset.k);
+    th.querySelector('.sortmark').textContent=i<0?'':(sorts[i].dir===1?'▲':'▼')+(sorts.length>1?(i+1):'');
+  });
+  const ps=parseFloat($('pageSize').value), pages=Math.max(1,Math.ceil(view.length/ps));
+  page=Math.min(page,pages-1);
+  $('tbody').innerHTML=view.slice(page*ps,page*ps+ps).map(d=>'<tr>'+LCOLS.map(c=>
+    `<td class="${c.num?'n':''}">${c.num?show(d[c.key]):esc(d.name)}</td>`).join('')+'</tr>').join('');
+  $('listCount').textContent=`${view.length} / ${DATA.length}`;
+  $('pageInfo').textContent=`${page+1} / ${pages}`;
+  $('prev').disabled=page===0; $('next').disabled=page>=pages-1;
+}
+
+function build(rows){
+  const head=rows[0].map(norm), idx=k=>head.indexOf(k);
+  DATA=rows.slice(1).map(r=>{const o={};
+    for(const c of COLS){const s=r[idx(c.key)];let x=(s==null||s.trim()==='')?null:parseFloat(s.replace(',','.'));
+      if(x!=null&&isNaN(x))x=null; if(c.zeroNull&&x===0)x=null; o[c.key]=x}
+    const nom=(r[idx('nom')]||'').trim(), pre=(r[idx('prenom')]||'').trim();
+    o.name=[nom,pre].filter(Boolean).join(', ');
+    return o});
+  for(const c of COLS){
+    const v=DATA.map(d=>d[c.key]).filter(x=>x!=null);
+    const min=Math.min(...v),max=Math.max(...v);
+    FULL[c.key]={min,max,int:!c.year&&v.every(Number.isInteger)&&(max-min)<=60};
+  }
+  $('charts').innerHTML=COLS.map(c=>`<div class="card">
+    <h2>${c.label}<span id="n_${c.key}"></span></h2>
+    <div class="canvas"><canvas id="c_${c.key}"></canvas></div>
+    <div class="range">Filtre : <b id="v_${c.key}"></b>
+      <div class="dual"><div class="track"></div><div class="fill" id="fill_${c.key}"></div>
+        <input type="range" id="lo_${c.key}"><input type="range" id="hi_${c.key}"></div></div>
+  </div>`).join('');
+  const css=getComputedStyle(document.documentElement);
+  Chart.defaults.color=css.getPropertyValue('--muted').trim();
+  Chart.defaults.borderColor=css.getPropertyValue('--line').trim();
+  for(const c of COLS){
+    const f=FULL[c.key], lo=$('lo_'+c.key), hi=$('hi_'+c.key);
+    const step=(c.year||f.int)?1:((f.max-f.min)/500||1);
+    for(const e of [lo,hi]){e.min=f.min;e.max=f.max;e.step=step}
+    lo.value=f.min; hi.value=f.max;
+    lo.oninput=()=>{if(+lo.value>+hi.value)hi.value=lo.value;page=0;update()};
+    hi.oninput=()=>{if(+hi.value<+lo.value)lo.value=hi.value;page=0;update()};
+    charts[c.key]=new Chart($('c_'+c.key),{type:'bar',
+      data:{labels:[],datasets:[{data:[],backgroundColor:css.getPropertyValue('--accent').trim(),borderWidth:0,categoryPercentage:1,barPercentage:.95}]},
+      options:{responsive:true,maintainAspectRatio:false,animation:false,
+        plugins:{legend:{display:false}},
+        scales:{x:{ticks:{maxRotation:60,autoSkip:true}},y:{beginAtZero:true,title:{display:true,text:'Effectif'},ticks:{precision:0}}}}});
+  }
+  $('lhead').innerHTML=LCOLS.map(c=>`<th class="${c.num?'n':''}" data-k="${c.key}">${c.label}<span class="sortmark"></span></th>`).join('');
+  $('lhead').onclick=e=>{const th=e.target.closest('th');if(th)toggleSort(th.dataset.k,e.shiftKey)};
+  $('pageSize').onchange=()=>{page=0;renderList()};
+  $('prev').onclick=()=>{if(page>0){page--;renderList()}};
+  $('next').onclick=()=>{page++;renderList()};
+  ['bins','ybin'].forEach(id=>$(id).oninput=update);
+  $('reset').onclick=()=>{for(const c of COLS){$('lo_'+c.key).value=FULL[c.key].min;$('hi_'+c.key).value=FULL[c.key].max}page=0;update()};
+  update();
+}
+
+function paintSlider(key){
+  const a=$('lo_'+key),b=$('hi_'+key),mn=+a.min,r=(+a.max-mn)||1,pa=(+a.value-mn)/r,pb=(+b.value-mn)/r;
+  const f=$('fill_'+key);
+  f.style.left=`calc(8px + (100% - 16px) * ${pa})`;
+  f.style.right=`calc(8px + (100% - 16px) * ${1-pb})`;
+  a.style.zIndex=pa>.5?4:2; b.style.zIndex=3;
+  $('v_'+key).textContent=`${fmt(a.value)} – ${fmt(b.value)}`;
+}
+
+function histogram(c,values){
+  const f=FULL[c.key], out={labels:[],counts:[]};
+  if(c.year){
+    const w=+$('ybin').value, start=Math.floor(f.min/w)*w;
+    const n=Math.floor((f.max-start)/w)+1;
+    out.labels=Array.from({length:n},(_,i)=>w===1?`${start+i}`:`${start+i*w}–${start+(i+1)*w-1}`);
+    out.counts=new Array(n).fill(0);
+    values.forEach(v=>out.counts[Math.floor((v-start)/w)]++);
+  }else if(f.int){
+    const n=f.max-f.min+1;
+    out.labels=Array.from({length:n},(_,i)=>String(f.min+i));
+    out.counts=new Array(n).fill(0);
+    values.forEach(v=>out.counts[v-f.min]++);
+  }else{
+    const n=Math.max(2,Math.min(100,+$('bins').value||20)), w=(f.max-f.min)/n||1;
+    out.counts=new Array(n).fill(0);
+    out.labels=Array.from({length:n},(_,i)=>`${fmt(f.min+i*w)}–${fmt(f.min+(i+1)*w)}`);
+    values.forEach(v=>out.counts[Math.min(n-1,Math.floor((v-f.min)/w))]++);
+  }
+  return out;
+}
+
+function update(){
+  // a filter is active only when its handles are narrower than the full range;
+  // an active filter also excludes rows with no value in that column
+  const active=[];
+  for(const c of COLS){
+    paintSlider(c.key);
+    const f=FULL[c.key], lo=+$('lo_'+c.key).value, hi=+$('hi_'+c.key).value, eps=(f.max-f.min)*1e-9;
+    if(lo>f.min+eps||hi<f.max-eps) active.push({k:c.key,lo,hi});
+  }
+  const rows=DATA.filter(d=>active.every(a=>{const v=d[a.k];return v!=null&&v>=a.lo&&v<=a.hi}));
+  $('count').textContent=`${rows.length} / ${DATA.length} personnes`;
+  lastRows=rows; renderList();
+  for(const c of COLS){
+    const vals=rows.map(d=>d[c.key]).filter(v=>v!=null);
+    const h=histogram(c,vals), ch=charts[c.key];
+    ch.data.labels=h.labels; ch.data.datasets[0].data=h.counts; ch.update('none');
+    const miss=rows.length-vals.length;
+    $('n_'+c.key).textContent=`n = ${vals.length}`+(miss?`, manquants : ${miss}`:'');
+  }
+}
+
+fetch(CSV_URL).then(r=>{if(!r.ok)throw new Error(r.status);return r.text()})
+  .then(t=>build(parseCSV(t)))
+  .catch(()=>{
+    $('msg').innerHTML=`<span class="err">Impossible de charger ${CSV_URL} (ouvrez via un serveur http, ou choisissez le fichier) :</span> <input type="file" id="file" accept=".csv,.tsv,.txt">`;
+    $('file').onchange=e=>e.target.files[0].text().then(t=>{$('msg').textContent='';build(parseCSV(t))});
+  });
+</script>
+</body>
+</html>

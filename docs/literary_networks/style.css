@@ -1,0 +1,70 @@
+:root{--bg:#fff;--fg:#1f2328;--muted:#656d76;--line:#d0d7de;--head:#f6f8fa;--accent:#0a69da;--hover:#f0f6ff;--err:#cf222e}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1117;--fg:#e6edf3;--muted:#8b949e;--line:#30363d;--head:#161b22;--accent:#58a6ff;--hover:#12233a;--err:#ff7b72}}
+*{box-sizing:border-box}
+body{margin:0;padding:1.2rem;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,sans-serif}
+h1{font-size:1.3rem;margin:0 0 .2rem}
+nav{margin-bottom:1rem}
+nav a{color:var(--accent);margin-right:1rem;text-decoration:none}
+.hint{font-size:12px;color:var(--muted)}
+.err{color:var(--err)}
+
+/* panels, form controls */
+.panel{border:1px solid var(--line);border-radius:8px;padding:.8rem 1rem;margin-bottom:1rem;background:var(--head)}
+.panel.sticky{position:sticky;top:0;z-index:5}
+.row{display:flex;flex-wrap:wrap;gap:1.2rem;align-items:flex-end}
+label{display:flex;flex-direction:column;font-size:12px;color:var(--muted);gap:.2rem}
+input[type=text],input[type=number],select{padding:.35rem .5rem;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);font:inherit}
+input[type=number]{width:6.5rem}
+select{width:auto}
+button{padding:.35rem .8rem;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);cursor:pointer;font:inherit}
+button:hover{border-color:var(--accent)}
+button:disabled{opacity:.4;cursor:default}
+.status{display:flex;justify-content:space-between;align-items:center;margin:.6rem 0;color:var(--muted)}
+
+/* population table */
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%}
+th,td{padding:.4rem .7rem;border-bottom:1px solid var(--line);white-space:nowrap}
+th{background:var(--head);text-align:left}
+th.n{text-align:right}
+tr.labels th{cursor:pointer;user-select:none}
+tr.labels th:hover{color:var(--accent)}
+tr.filters th{cursor:default;padding:.3rem .5rem;font-weight:400}
+tr.filters input{width:100%;min-width:6rem;padding:.25rem .4rem;font-size:12px}
+tr.filters input.bad{border-color:var(--err);color:var(--err)}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+tbody tr:hover{background:var(--hover)}
+.sortmark{color:var(--accent);font-size:11px;margin-left:.2rem}
+
+/* dual-handle slider (distributions) */
+.slider{min-width:260px}
+.slider input{width:100%}
+.dual{position:relative;height:22px;margin-top:.3rem}
+.dual .track,.dual .fill{position:absolute;top:9px;height:4px;border-radius:2px}
+.dual .track{left:8px;right:8px;background:var(--line)}
+.dual .fill{background:var(--accent)}
+.dual input[type=range]{position:absolute;left:0;top:0;width:100%;height:22px;margin:0;background:none;pointer-events:none;-webkit-appearance:none;appearance:none}
+.dual input[type=range]::-webkit-slider-runnable-track{background:transparent}
+.dual input[type=range]::-moz-range-track{background:transparent}
+.dual input[type=range]::-webkit-slider-thumb{pointer-events:auto;-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);box-shadow:0 0 0 1px var(--accent);cursor:pointer}
+.dual input[type=range]::-moz-range-thumb{pointer-events:auto;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);box-shadow:0 0 0 1px var(--accent);cursor:pointer}
+
+/* distribution charts */
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:1rem}
+.card{border:1px solid var(--line);border-radius:8px;padding:.7rem .9rem}
+.card h2{font-size:.95rem;margin:0 0 .4rem;display:flex;justify-content:space-between}
+.card h2 span{color:var(--muted);font-weight:400;font-size:12px}
+.canvas{position:relative;height:260px}
+
+/* per-chart range filter */
+.range{font-size:12px;color:var(--muted);margin-top:.5rem}
+.range b{color:var(--fg)}
+
+/* filtered list under the charts */
+.listtitle{font-size:1.05rem;margin:1.6rem 0 .5rem;display:flex;gap:.8rem;align-items:baseline}
+.listtitle span{font-size:12px;font-weight:400;color:var(--muted)}
+
+/* correlations */
+.scatters{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:1rem}
+.scatters .canvas{height:320px}
+.pos{color:#1a7f37}.neg{color:#cf222e}

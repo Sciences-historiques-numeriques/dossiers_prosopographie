@@ -99,21 +99,22 @@ FROM "20170907_persovd" p
 where Date_naiss > 750
 and Date_naiss < 2010;
 
+-- query with order for periods
 with epoque as (
 select 
 	case 
 		when date_naiss > 750 AND Date_naiss < 1401
-		then '01-moyen-age'
+		then '01->moyen-age'
 		when date_naiss > 1400 AND Date_naiss < 1551
-		then '02-renaissance'
+		then '02->renaissance'
 		when date_naiss > 1550 AND Date_naiss < 1771
-		then '03-ancien-regime'
+		then '03->ancien-regime'
 		when date_naiss > 1770 AND Date_naiss < 1881
-		then '04-19-siecle'
+		then '04->19-siecle'
 		when date_naiss > 1880 AND Date_naiss < 1951
-		then '05-20-siecle'
+		then '05->20-siecle'
 		when date_naiss > 1950 
-		then '06-epoque-contemporaine'
+		then '06->epoque-contemporaine'
 	end epoque
 FROM "20170907_persovd" p 
 where Date_naiss > 750

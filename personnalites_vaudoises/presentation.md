@@ -5,10 +5,13 @@
 
 ## Base de données
 
-* [Le site *Personnalités vaudoises* avec fonction de recherche](https://patrinum.ch/search?c=PersonnalitesVD&cc=PersonnalitesVD&ln=fr)
+* [Le site *Personnalités vaudoises* avec fonction de recherche](https://patrinum.ch/search?c=PersonnalitesVD&cc=PersonnalitesVD&ln=fr) <br/>
+"Les métadonnées des documents publiés sur la plateforme Patrinum sont, sauf indication contraire, diffusées sous la licence CC0 1.0 Image dans la mesure où celles-ci sont établies par la BCU Lausanne ou les autres bibliothèques du réseau." [Droits et conditions d'utilisation](https://patrinum.ch/pages/?page=ConditionsUtilisation&ln=fr)
 * [Swiss Heritage (Open) Data](https://make.opendata.ch/wiki/data:glam_ch#swiss_heritage_data)
 * [Entrée *Personnalités vaudoises*](https://make.opendata.ch/wiki/data:glam_ch#personnalites_vaudoises)
-* [Données téléchargeables](https://make.opendata.ch/wiki/_media/data:20170907_persovd.xlsx)
+ <br/>This is a broken link. Search for the dataset on [Datasets Catalogue](https://data.openglam.ch/datasets/)
+* [Données téléchargeables ici](https://make.opendata.ch/wiki/_media/data:20170907_persovd.xlsx)
+
 
 
 <br/>
